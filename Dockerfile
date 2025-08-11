@@ -8,6 +8,7 @@ ENV CUDA_INSTALL_PATH=/usr/local/cuda
 ENV PTXAS_CUDA_INSTALL_PATH=/usr/local/cuda
 ENV BOOST_ROOT=/usr/include/boost
 ENV PATH=$CUDA_INSTALL_PATH/bin:$PATH
+ARG DEBIAN_FRONTEND=noninteractive
 
 ENV GPUAPPS_ROOT=/accel-sim/gpu-app-collection
 
