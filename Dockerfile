@@ -22,7 +22,6 @@ RUN pip3 install pyyaml plotly psutil
 
 RUN git clone --recurse-submodules https://github.com/nasirali91/gpu-app-collection.git  && cd gpu-app-collection && bash test-build.sh && bash get_regression_data.sh
 
-
 #  autocomplete
 RUN echo "source /usr/share/bash-completion/completions/git" >> ~/.bashrc
 
