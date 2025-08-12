@@ -12,7 +12,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 ENV GPUAPPS_ROOT=/accel-sim/gpu-app-collection
 
-RUN apt-get update && apt-get install -y wget dialog apt-utils build-essential xutils-dev bison zlib1g-dev flex libglu1-mesa-dev git g++ libssl-dev libxml2-dev libboost-all-dev vim python3-setuptools python3-pip python3-venv cmake libfreeimage3 libfreeimage-dev freeglut3-dev pkg-config python3-doc python3-tk python3-venv python3-doc binfmt-support psmisc apt-utils gdb curl bash-completion && apt-get clean
+RUN apt-get update && apt-get install -y wget dialog apt-utils build-essential xutils-dev bison zlib1g-dev flex libglu1-mesa-dev git g++ gfortran libssl-dev libxml2-dev libboost-all-dev vim python3-setuptools python3-pip python3-venv cmake libfreeimage3 libfreeimage-dev freeglut3-dev pkg-config python3-doc python3-tk python3-venv python3-doc binfmt-support psmisc apt-utils gdb curl bash-completion && apt-get clean
 
 # Create and activate a virtual environment, venv is needed because of PEP 668
 RUN python3 -m venv /venv
