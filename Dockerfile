@@ -12,32 +12,53 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 ENV GPUAPPS_ROOT=/accel-sim/gpu-app-collection
 
-RUN apt-get update && apt-get install -y wget dialog apt-utils build-essential xutils-dev bison zlib1g-dev flex libglu1-mesa-dev git g++ gfortran libssl-dev libxml2-dev libboost-all-dev vim python3-setuptools python3-pip python3-venv cmake libfreeimage3 libfreeimage-dev freeglut3-dev pkg-config python3-doc python3-tk python3-venv python3-doc binfmt-support psmisc apt-utils gdb curl bash-completion && apt-get clean
+# hadolint ignore=DL3008
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        wget dialog apt-utils build-essential xutils-dev bison zlib1g-dev flex \
+        libglu1-mesa-dev git g++ libssl-dev libxml2-dev libboost-all-dev vim \
+        python3-setuptools python3-pip python3-venv cmake libfreeimage3 \
+        libfreeimage-dev freeglut3-dev pkg-config python3-doc python3-tk \
+        binfmt-support psmisc apt-utils gdb curl bash-completion \
+        # --- ADDED DEPENDENCIES FOR CUDA SAMPLES ---
+        libxmu-dev libxi-dev libglvnd-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
-# Create and activate a virtual environment, venv is needed because of PEP 668
-RUN python3 -m venv /venv
+RUN python3 -m venv /venv \
+    && /venv/bin/pip install --no-cache-dir --upgrade pip \
+    && /venv/bin/pip install --no-cache-dir \
+        pyyaml==6.0.1 \
+        plotly==5.20.0 \
+        psutil==5.9.8 # IMPORTANT: Replace with actual versions you've tested!
+
 ENV PATH="/venv/bin:$PATH"
-RUN pip3 install --upgrade pip
-RUN pip3 install pyyaml plotly psutil
 
-RUN git clone --recurse-submodules https://github.com/nasirali91/gpu-app-collection.git \
-    && cd gpu-app-collection \
+# The previous error indicated a build failure within test-build.sh,
+# specifically related to cuda-samples.
+# The `git clone` and `cd` are fine. The issue is within the `bash test-build.sh` execution.
+# We will clone into the expected directory and then run the build script.
+RUN git clone --recurse-submodules https://github.com/nasirali91/gpu-app-collection.git /accel-sim/gpu-app-collection \
+    && cd /accel-sim/gpu-app-collection \
     && bash test-build.sh \
     && bash get_regression_data.sh
 
-#  autocomplete
-RUN echo "source /usr/share/bash-completion/completions/git" >> ~/.bashrc
-
-# Install fzf
-RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && \
-    ~/.fzf/install --all
+# autocomplete
+RUN echo "source /usr/share/bash-completion/completions/git" >> ~/.bashrc \
+    && git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf \
+    && ~/.fzf/install --all
 
 #get Nsys
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update --allow-insecure-repositories && apt update && apt install -y --no-install-recommends gnupg wget \
-    && mkdir -p /etc/apt/keyrings 
-RUN wget -qO - https://developer.download.nvidia.com/devtools/repos/ubuntu2404/amd64/7fa2af80.pub | tee /etc/apt/keyrings/nvidia.asc
-RUN echo "deb [signed-by=/etc/apt/keyrings/nvidia.asc] http://developer.download.nvidia.com/devtools/repos/ubuntu2404/amd64 /" | tee /etc/apt/sources.list.d/nvidia.list
-RUN apt-get update --allow-insecure-repositories
-RUN apt install  -y nsight-systems-cli --allow-unauthenticated
+# hadolint ignore=DL3008,DL4006
+RUN set -o pipefail; \
+    apt-get update --allow-insecure-repositories \
+    && apt-get install -y --no-install-recommends gnupg wget \
+    && mkdir -p /etc/apt/keyrings \
+    && wget -qO - https://developer.download.nvidia.com/devtools/repos/ubuntu2404/amd64/7fa2af80.pub | tee /etc/apt/keyrings/nvidia.asc \
+    && echo "deb [signed-by=/etc/apt/keyrings/nvidia.asc] http://developer.download.nvidia.com/devtools/repos/ubuntu2404/amd64 /" | tee /etc/apt/sources.list.d/nvidia.list \
+    && apt-get update --allow-insecure-repositories \
+    && apt-get install -y --no-install-recommends nsight-systems-cli --allow-unauthenticated \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
