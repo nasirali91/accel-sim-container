@@ -12,19 +12,20 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 ENV GPUAPPS_ROOT=/accel-sim/gpu-app-collection
 
+# We are explicitly ignoring this warning here.
 # hadolint ignore=DL3008
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         wget dialog apt-utils build-essential xutils-dev bison zlib1g-dev flex \
-        libglu1-mesa-dev git g++ libssl-dev libxml2-dev libboost-all-dev vim \
+        libglu1-mesa-dev git g++ libssl-dev libxml2-dev libxmu-dev libxi-dev libglvnd-dev libboost-all-dev vim \
         python3-setuptools python3-pip python3-venv cmake libfreeimage3 \
-        libfreeimage-dev freeglut3-dev pkg-config python3-doc python3-tk \
+        libfreeimage-dev freeglut3-dev pkg-config gfortran python3-doc python3-tk \
         binfmt-support psmisc apt-utils gdb curl bash-completion \
-        # --- ADDED DEPENDENCIES FOR CUDA SAMPLES ---
-        libxmu-dev libxi-dev libglvnd-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
+# DL3059: Multiple consecutive `RUN` instructions.
+# DL3013: Pin versions in pip.
 RUN python3 -m venv /venv \
     && /venv/bin/pip install --no-cache-dir --upgrade pip \
     && /venv/bin/pip install --no-cache-dir \
@@ -34,16 +35,15 @@ RUN python3 -m venv /venv \
 
 ENV PATH="/venv/bin:$PATH"
 
-# The previous error indicated a build failure within test-build.sh,
-# specifically related to cuda-samples.
-# The `git clone` and `cd` are fine. The issue is within the `bash test-build.sh` execution.
-# We will clone into the expected directory and then run the build script.
-RUN git clone --recurse-submodules https://github.com/nasirali91/gpu-app-collection.git /accel-sim/gpu-app-collection \
-    && cd /accel-sim/gpu-app-collection \
+
+WORKDIR /accel-sim/gpu-app-collection
+RUN git clone --recurse-submodules https://github.com/nasirali91/gpu-app-collection.git . \
     && bash test-build.sh \
     && bash get_regression_data.sh
 
-# autocomplete
+WORKDIR /accel-sim
+
+
 RUN echo "source /usr/share/bash-completion/completions/git" >> ~/.bashrc \
     && git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf \
     && ~/.fzf/install --all
