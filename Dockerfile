@@ -12,7 +12,6 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 ENV GPUAPPS_ROOT=/accel-sim/gpu-app-collection
 
-# We are explicitly ignoring this warning here.
 # hadolint ignore=DL3008
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
