@@ -30,7 +30,7 @@ RUN python3 -m venv /venv \
         pyyaml==6.0.1 \
         plotly==5.20.0 \
         psutil==5.9.8 # IMPORTANT: Replace with actual versions you've tested!
-
+        
 ENV PATH="/venv/bin:$PATH"
 
 
