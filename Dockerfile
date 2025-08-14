@@ -12,7 +12,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 ENV GPUAPPS_ROOT=/accel-sim/gpu-app-collection
 
-# hadolint ignore=DL3008
+
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         wget dialog apt-utils build-essential xutils-dev bison zlib1g-dev flex \
@@ -23,7 +23,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-# DL3059: Multiple consecutive `RUN` instructions.
+
 # DL3013: Pin versions in pip.
 RUN python3 -m venv /venv \
     && /venv/bin/pip install --no-cache-dir --upgrade pip \
