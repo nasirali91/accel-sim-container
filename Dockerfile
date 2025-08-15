@@ -29,15 +29,13 @@ RUN python3 -m venv /venv \
     && /venv/bin/pip install --no-cache-dir \
         pyyaml==6.0.1 \
         plotly==5.20.0 \
-        psutil==5.9.8 # IMPORTANT: Replace with actual versions you've tested!
-        
+        psutil==5.9.8 
 ENV PATH="/venv/bin:$PATH"
 
 
 WORKDIR /accel-sim/gpu-app-collection
-RUN git clone --recurse-submodules https://github.com/nasirali91/gpu-app-collection.git . \
-    && bash test-build.sh \
-    && bash get_regression_data.sh
+RUN git clone --recurse-submodules https://github.com/nasirali91/gpu-app-collection.git . 
+# && bash test-build.sh  && bash get_regression_data.sh
 
 WORKDIR /accel-sim
 
