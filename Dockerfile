@@ -52,8 +52,8 @@ RUN set -o pipefail; \
     apt-get update --allow-insecure-repositories \
     && apt-get install -y --no-install-recommends gnupg wget \
     && mkdir -p /etc/apt/keyrings \
-    && wget -qO - https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub | tee /etc/apt/keyrings/nvidia.asc \
-    && echo "deb [signed-by=/etc/apt/keyrings/nvidia.asc] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /" | tee /etc/apt/sources.list.d/nvidia.list \
+    && wget -qO - https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/3bf863cc.pub | tee /etc/apt/keyrings/nvidia.asc \
+    && echo "deb [signed-by=/etc/apt/keyrings/nvidia.asc] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/ /" | tee /etc/apt/sources.list.d/nvidia.list \
     && apt-get update --allow-insecure-repositories \
     && apt-get install -y --no-install-recommends nsight-systems-cli --allow-unauthenticated \
     && rm -rf /var/lib/apt/lists/* \
