@@ -59,7 +59,7 @@ RUN echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu240
     wget -qO - https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/3bf863cc.pub | apt-key add - && \
     apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nsight-compute-2024.2.1 && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nsight-systems-cli --allow-unauthenticated && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nsight-systems-2024.2.1 --allow-unauthenticated && \
     rm -rf /var/lib/apt/lists/* &&\
     apt-get clean
 
