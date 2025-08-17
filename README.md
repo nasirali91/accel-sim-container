@@ -3,7 +3,7 @@
 This repo hosts the Dockerfiles used in regression tests for Accel-Sim and GPGPU-Sim. 
 The image can be pull from Github Container Registry [accelsim cantainers](https://github.com/accel-sim/Dockerfile/pkgs/container/accel-sim-framework)
 ```
-docker pull ghcr.io/accel-sim/accel-sim-framework:ubuntu-24.04-cuda-12.8
+docker pull ghcr.io/nasirali91/accel-sim-container:Ubuntu-22.04-cuda-12.6
 ```
 
 To run tests:
@@ -15,5 +15,5 @@ To start conianer for devlopment:
 
 ```
 # in accel-sim-framework
-docker run --name <container name >  --runtime=nvidia  --gpus all -it ghcr.io/accel-sim/accel-sim-framework:ubuntu-24.04-cuda-12.8 /bin/bash 
+docker run --name <container name >  --runtime=nvidia  --gpus all -it ghcr.io/nasirali91/accel-sim-container:Ubuntu-22.04-cuda-12.6 /bin/bash 
 ```
