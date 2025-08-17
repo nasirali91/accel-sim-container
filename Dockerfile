@@ -47,14 +47,20 @@ RUN echo "source /usr/share/bash-completion/completions/git" >> ~/.bashrc \
 #get Nsys
 ENV DEBIAN_FRONTEND=noninteractive
 
-# hadolint ignore=DL3008,DL4006
-RUN set -o pipefail; \
-    apt-get update --allow-insecure-repositories \
-    && apt-get install -y --no-install-recommends gnupg wget \
-    && mkdir -p /etc/apt/keyrings \
-    && wget -qO - https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/3bf863cc.pub | tee /etc/apt/keyrings/nvidia.asc \
-    && echo "deb [signed-by=/etc/apt/keyrings/nvidia.asc] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/ /" | tee /etc/apt/sources.list.d/nvidia.list \
-    && apt-get update --allow-insecure-repositories \
-    && apt-get install -y --no-install-recommends nsight-systems-cli --allow-unauthenticated \
-    && rm -rf /var/lib/apt/lists/* \
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        apt-transport-https \
+        ca-certificates \
+        gnupg \
+        wget && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64 /" > /etc/apt/sources.list.d/cuda.list && \
+    wget -qO - https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/3bf863cc.pub | apt-key add - && \
+    apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nsight-compute-2024.2.1 && \
+    &&  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nsight-systems-cli --allow-unauthenticated \
+    rm -rf /var/lib/apt/lists/* \
     && apt-get clean
+
+
