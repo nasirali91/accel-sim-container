@@ -27,9 +27,9 @@ RUN apt-get update \
 RUN python3 -m venv /venv \
     && /venv/bin/pip install --no-cache-dir --upgrade pip \
     && /venv/bin/pip install --no-cache-dir \
-        pyyaml==6.0.1 \
-        plotly==5.20.0 \
-        psutil==5.9.8 
+        pyyaml \
+        plotly \
+        psutil 
 ENV PATH="/venv/bin:$PATH"
 
 
